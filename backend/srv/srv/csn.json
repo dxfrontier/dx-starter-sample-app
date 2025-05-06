@@ -1,0 +1,3662 @@
+{
+  "namespace": "sap.samples.poetryslams",
+  "definitions": {
+    "sap.samples.poetryslams.PoetrySlams": {
+      "kind": "entity",
+      "@assert.unique.identifier": [
+        {
+          "=": "number"
+        }
+      ],
+      "@fiori.draft.enabled": true,
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "@title": "{i18n>uuid}",
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "number": {
+          "@title": "{i18n>number}",
+          "@readonly": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "title": {
+          "@title": "{i18n>title}",
+          "@mandatory": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "description": {
+          "@title": "{i18n>description}",
+          "type": "cds.String",
+          "length": 1000
+        },
+        "dateTime": {
+          "@title": "{i18n>dateTime}",
+          "@mandatory": true,
+          "type": "cds.DateTime"
+        },
+        "maxVisitorsNumber": {
+          "@title": "{i18n>maxVisitorsNumber}",
+          "@mandatory": true,
+          "type": "cds.Integer"
+        },
+        "freeVisitorSeats": {
+          "@title": "{i18n>freeVisitorSeats}",
+          "@readonly": true,
+          "type": "cds.Integer"
+        },
+        "visitorsFeeAmount": {
+          "@title": "{i18n>visitorsFeeAmount}",
+          "@Measures.ISOCurrency": {
+            "=": "visitorsFeeCurrency_code"
+          },
+          "type": "cds.Decimal",
+          "precision": 6,
+          "scale": 2
+        },
+        "visitorsFeeCurrency": {
+          "@title": "{i18n>visitorsFeeCurrency}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "sap.common.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "status": {
+          "@assert.integrity": true,
+          "@title": "{i18n>status}",
+          "@readonly": true,
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "sap.samples.poetryslams.PoetrySlamStatusCodes",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "visits": {
+          "@title": "{i18n>visits}",
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.samples.poetryslams.Visits",
+          "on": [
+            {
+              "ref": [
+                "visits",
+                "parent"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.samples.poetryslams.Visits": {
+      "kind": "entity",
+      "@assert.unique.visitorVisit": [
+        {
+          "=": "parent"
+        },
+        {
+          "=": "visitor"
+        }
+      ],
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "@title": "{i18n>uuid}",
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "parent": {
+          "@assert.integrity": true,
+          "@title": "{i18n>poetrySlamUUID}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "sap.samples.poetryslams.PoetrySlams",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "visitor": {
+          "@assert.integrity": true,
+          "@title": "{i18n>visitorUUID}",
+          "@mandatory": true,
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "sap.samples.poetryslams.Visitors",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "artistIndicator": {
+          "@title": "{i18n>artistIndicator}",
+          "type": "cds.Boolean",
+          "default": {
+            "val": false
+          }
+        },
+        "status": {
+          "@assert.integrity": true,
+          "@title": "{i18n>status}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "sap.samples.poetryslams.VisitStatusCodes",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.samples.poetryslams.Visitors": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "@title": "{i18n>uuid}",
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "name": {
+          "@title": "{i18n>name}",
+          "@mandatory": true,
+          "type": "cds.String"
+        },
+        "email": {
+          "@assert.format": "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+          "@title": "{i18n>email}",
+          "@Communication.IsEmailAddress": true,
+          "type": "cds.String"
+        },
+        "visits": {
+          "@title": "{i18n>visits}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.samples.poetryslams.Visits",
+          "on": [
+            {
+              "ref": [
+                "visits",
+                "visitor"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.samples.poetryslams.PoetrySlamStatusCodes": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer",
+          "default": {
+            "val": 1
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.samples.poetryslams.PoetrySlamStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.samples.poetryslams.PoetrySlamStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.samples.poetryslams.VisitStatusCodes": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.samples.poetryslams.VisitStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.samples.poetryslams.VisitStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "cds.xt.MTXServices": {
+      "@source": "@sap/cds-mtxs/srv/bootstrap.cds",
+      "kind": "service",
+      "@protocol": "none",
+      "@impl": "@sap/cds-mtxs/srv/bootstrap.js"
+    },
+    "Language": {
+      "kind": "type",
+      "@title": "{i18n>Language}",
+      "@description": "{i18n>LanguageCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Languages",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Currency": {
+      "kind": "type",
+      "@title": "{i18n>Currency}",
+      "@description": "{i18n>CurrencyCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Currencies",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Country": {
+      "kind": "type",
+      "@title": "{i18n>Country}",
+      "@description": "{i18n>CountryCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Countries",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Timezone": {
+      "kind": "type",
+      "type": "cds.Association",
+      "target": "sap.common.Timezones",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "sap.common": {
+      "kind": "context"
+    },
+    "sap.common.Locale": {
+      "kind": "type",
+      "@title": "{i18n>LanguageCode}",
+      "type": "cds.String",
+      "length": 14
+    },
+    "sap.common.Languages": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Countries": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Currencies": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5
+        },
+        "minorUnit": {
+          "@title": "{i18n>CurrencyMinorUnit}",
+          "type": "cds.Int16"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Timezones": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>TimeZoneCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 100
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Timezones.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Timezones.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.CodeList": {
+      "kind": "aspect",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        }
+      }
+    },
+    "sap.common.TextsAspect": {
+      "kind": "aspect",
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        }
+      }
+    },
+    "cuid": {
+      "kind": "aspect",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        }
+      }
+    },
+    "managed": {
+      "kind": "aspect",
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        }
+      }
+    },
+    "temporal": {
+      "kind": "aspect",
+      "elements": {
+        "validFrom": {
+          "@cds.valid.from": true,
+          "type": "cds.Timestamp"
+        },
+        "validTo": {
+          "@cds.valid.to": true,
+          "type": "cds.Timestamp"
+        }
+      }
+    },
+    "User": {
+      "kind": "type",
+      "@title": "{i18n>UserID}",
+      "@description": "{i18n>UserID.Description}",
+      "type": "cds.String",
+      "length": 255
+    },
+    "PoetrySlamService": {
+      "@source": "srv/poetryslam/poetrySlamService.cds",
+      "kind": "service",
+      "@path": "poetryslamservice",
+      "@impl": "./poetrySlamServiceImplementation.js",
+      "@requires": [
+        "PoetrySlamFull",
+        "PoetrySlamRestricted"
+      ]
+    },
+    "PoetrySlamService.PoetrySlams": {
+      "kind": "entity",
+      "@odata.draft.enabled": true,
+      "@Common.SemanticObject": "poetryslams",
+      "@Common.SemanticKey": [
+        {
+          "=": "number"
+        }
+      ],
+      "@restrict": [
+        {
+          "grant": [
+            "*"
+          ],
+          "to": "PoetrySlamFull"
+        },
+        {
+          "grant": [
+            "READ"
+          ],
+          "to": "PoetrySlamRestricted",
+          "where": "status_code = 2 or status_code = 3",
+          "_where": "[{\"ref\":[\"status_code\"]},\"=\",{\"val\":2},\"or\",{\"ref\":[\"status_code\"]},\"=\",{\"val\":3}]"
+        }
+      ],
+      "@Capabilities.DeleteRestrictions.Deletable.$edmJson.$Or": [
+        {
+          "$Eq": [
+            {
+              "$Path": "status/code"
+            },
+            1
+          ]
+        },
+        {
+          "$Eq": [
+            {
+              "$Path": "status/code"
+            },
+            4
+          ]
+        }
+      ],
+      "@Common.SideEffects#maxVisitorsNumber.$Type": "Common.SideEffectsType",
+      "@Common.SideEffects#maxVisitorsNumber.SourceProperties": [
+        "maxVisitorsNumber"
+      ],
+      "@Common.SideEffects#maxVisitorsNumber.TargetProperties": [
+        "freeVisitorSeats",
+        "status_code",
+        "statusCriticality"
+      ],
+      "@Common.SideEffects#visits.$Type": "Common.SideEffectsType",
+      "@Common.SideEffects#visits.SourceEntities": [
+        "visits"
+      ],
+      "@Common.SideEffects#visits.TargetProperties": [
+        "freeVisitorSeats",
+        "status_code",
+        "statusCriticality"
+      ],
+      "@UI.DataPoint#bookedSeats.Title": "{i18n>bookedSeatsTitle}",
+      "@UI.DataPoint#bookedSeats.Value": {
+        "=": "bookedSeats"
+      },
+      "@UI.DataPoint#bookedSeats.Visualization": {
+        "#": "Progress"
+      },
+      "@UI.DataPoint#bookedSeats.TargetValue": {
+        "=": "maxVisitorsNumber"
+      },
+      "@UI.DataPoint#dateTime.$Type": "UI.DataPointType",
+      "@UI.DataPoint#dateTime.Value": {
+        "=": "dateTime"
+      },
+      "@UI.DataPoint#dateTime.Title": "{i18n>dateTime}",
+      "@UI.DataPoint#status_code.$Type": "UI.DataPointType",
+      "@UI.DataPoint#status_code.Value": {
+        "=": "status_code"
+      },
+      "@UI.DataPoint#status_code.Title": "{i18n>status}",
+      "@UI.DataPoint#status_code.Criticality": {
+        "=": "statusCriticality"
+      },
+      "@UI.DataPoint#visitorsFeeAmount.$Type": "UI.DataPointType",
+      "@UI.DataPoint#visitorsFeeAmount.Value": {
+        "=": "visitorsFeeAmount"
+      },
+      "@UI.DataPoint#visitorsFeeAmount.Title": "{i18n>visitorsFeeAmount}",
+      "@UI.Facets": [
+        {
+          "$Type": "UI.ReferenceFacet",
+          "ID": "GeneralData",
+          "Label": "{i18n>generalData}",
+          "Target": "@UI.FieldGroup#GeneralData"
+        },
+        {
+          "$Type": "UI.ReferenceFacet",
+          "Label": "{i18n>visitorData}",
+          "ID": "VisitorData",
+          "Target": "visits/@UI.LineItem#VisitorData",
+          "@UI.Hidden": {
+            "$edmJson": {
+              "$Eq": [
+                {
+                  "$Path": "status/code"
+                },
+                1
+              ]
+            }
+          }
+        },
+        {
+          "$Type": "UI.ReferenceFacet",
+          "Label": "{i18n>administrativeData}",
+          "ID": "AdministrativeData",
+          "Target": "@UI.FieldGroup#AdministrativeData"
+        }
+      ],
+      "@UI.FieldGroup#CreatedByAndOn.$Type": "UI.FieldGroupType",
+      "@UI.FieldGroup#CreatedByAndOn.Data": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "createdBy"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "createdAt"
+          }
+        }
+      ],
+      "@UI.FieldGroup#AdministrativeData.$Type": "UI.FieldGroupType",
+      "@UI.FieldGroup#AdministrativeData.Data": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "createdBy"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "createdAt"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "modifiedBy"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "modifiedAt"
+          }
+        }
+      ],
+      "@UI.FieldGroup#GeneralData.$Type": "UI.FieldGroupType",
+      "@UI.FieldGroup#GeneralData.Data": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "number"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "status.code"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "title"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "description"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "dateTime"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "visitorsFeeAmount"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "visitorsFeeCurrency_code"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "maxVisitorsNumber"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "freeVisitorSeats"
+          }
+        }
+      ],
+      "@UI.HeaderFacets": [
+        {
+          "$Type": "UI.ReferenceFacet",
+          "ID": "dateTime",
+          "Target": "@UI.DataPoint#dateTime"
+        },
+        {
+          "$Type": "UI.ReferenceFacet",
+          "ID": "bookedSeats",
+          "Target": "@UI.DataPoint#bookedSeats"
+        },
+        {
+          "$Type": "UI.ReferenceFacet",
+          "ID": "visitorsFeeAmount",
+          "Target": "@UI.DataPoint#visitorsFeeAmount"
+        },
+        {
+          "$Type": "UI.ReferenceFacet",
+          "ID": "status_code",
+          "Target": "@UI.DataPoint#status_code"
+        },
+        {
+          "$Type": "UI.ReferenceFacet",
+          "ID": "CreatedByAndOn",
+          "Target": "@UI.FieldGroup#CreatedByAndOn"
+        }
+      ],
+      "@UI.HeaderInfo.$Type": "UI.HeaderInfoType",
+      "@UI.HeaderInfo.TypeName": "{i18n>poetrySlam}",
+      "@UI.HeaderInfo.TypeNamePlural": "{i18n>poetrySlam-plural}",
+      "@UI.HeaderInfo.Title.$Type": "UI.DataField",
+      "@UI.HeaderInfo.Title.Value": {
+        "=": "number"
+      },
+      "@UI.HeaderInfo.Description.$Type": "UI.DataField",
+      "@UI.HeaderInfo.Description.Value": {
+        "=": "description"
+      },
+      "@UI.Identification": [
+        {
+          "$Type": "UI.DataFieldForAction",
+          "Action": "PoetrySlamService.publish",
+          "Label": "{i18n>publish}",
+          "@UI.Hidden": {
+            "$edmJson": {
+              "$Not": {
+                "$Path": "IsActiveEntity"
+              }
+            }
+          }
+        },
+        {
+          "$Type": "UI.DataFieldForAction",
+          "Action": "PoetrySlamService.cancel",
+          "Label": "{i18n>cancel}",
+          "@UI.Hidden": {
+            "$edmJson": {
+              "$Not": {
+                "$Path": "IsActiveEntity"
+              }
+            }
+          }
+        },
+        {
+          "$Type": "UI.DataFieldForIntentBasedNavigation",
+          "SemanticObject": "visitors",
+          "Action": "display",
+          "Label": "{i18n>maintainVisitors}"
+        }
+      ],
+      "@UI.LineItem": [
+        {
+          "$Type": "UI.DataFieldForAction",
+          "Action": "PoetrySlamService.cancel",
+          "Label": "{i18n>cancel}"
+        },
+        {
+          "$Type": "UI.DataFieldForAction",
+          "Action": "PoetrySlamService.publish",
+          "Label": "{i18n>publish}"
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "number"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "title"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "description"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "status_code"
+          },
+          "Criticality": {
+            "=": "statusCriticality"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "dateTime"
+          }
+        },
+        {
+          "$Type": "UI.DataFieldForAnnotation",
+          "Target": "@UI.DataPoint#bookedSeats"
+        },
+        {
+          "$Type": "UI.DataFieldForAction",
+          "Action": "PoetrySlamService.EntityContainer/createTestData",
+          "Label": "{i18n>generateSampleData}"
+        }
+      ],
+      "@UI.SelectionFields": [
+        {
+          "=": "number"
+        },
+        {
+          "=": "title"
+        },
+        {
+          "=": "description"
+        },
+        {
+          "=": "status_code"
+        },
+        {
+          "=": "dateTime"
+        }
+      ],
+      "@assert.unique.identifier": [
+        {
+          "=": "number"
+        }
+      ],
+      "@fiori.draft.enabled": true,
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "sap.samples.poetryslams.PoetrySlams"
+            ]
+          },
+          "columns": [
+            "*",
+            {
+              "xpr": [
+                {
+                  "ref": [
+                    "maxVisitorsNumber"
+                  ]
+                },
+                "-",
+                {
+                  "ref": [
+                    "freeVisitorSeats"
+                  ]
+                }
+              ],
+              "as": "bookedSeats",
+              "cast": {
+                "type": "cds.Integer"
+              }
+            },
+            {
+              "virtual": true,
+              "val": null,
+              "as": "statusCriticality",
+              "cast": {
+                "type": "cds.Integer"
+              }
+            }
+          ]
+        }
+      },
+      "elements": {
+        "ID": {
+          "@UI.Hidden": true,
+          "@title": "{i18n>uuid}",
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "number": {
+          "@title": "{i18n>number}",
+          "@readonly": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "title": {
+          "@title": "{i18n>title}",
+          "@mandatory": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "description": {
+          "@UI.MultiLineText": true,
+          "@title": "{i18n>description}",
+          "type": "cds.String",
+          "length": 1000
+        },
+        "dateTime": {
+          "@title": "{i18n>dateTime}",
+          "@mandatory": true,
+          "type": "cds.DateTime"
+        },
+        "maxVisitorsNumber": {
+          "@title": "{i18n>maxVisitorsNumber}",
+          "@mandatory": true,
+          "type": "cds.Integer"
+        },
+        "freeVisitorSeats": {
+          "@title": "{i18n>freeVisitorSeats}",
+          "@readonly": true,
+          "type": "cds.Integer"
+        },
+        "visitorsFeeAmount": {
+          "@title": "{i18n>visitorsFeeAmount}",
+          "@Measures.ISOCurrency": {
+            "=": "visitorsFeeCurrency_code"
+          },
+          "type": "cds.Decimal",
+          "precision": 6,
+          "scale": 2
+        },
+        "visitorsFeeCurrency": {
+          "@UI.Hidden": true,
+          "@title": "{i18n>visitorsFeeCurrency}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "PoetrySlamService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "status": {
+          "@Common.Text": {
+            "=": "status.name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@assert.integrity": true,
+          "@title": "{i18n>status}",
+          "@readonly": true,
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "PoetrySlamService.PoetrySlamStatusCodes",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "visits": {
+          "@title": "{i18n>visits}",
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "PoetrySlamService.Visits",
+          "on": [
+            {
+              "ref": [
+                "visits",
+                "parent"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "bookedSeats": {
+          "@title": "{i18n>bookedSeats}",
+          "@Core.Computed": true,
+          "type": "cds.Integer"
+        },
+        "statusCriticality": {
+          "@title": "{i18n>statusCriticality}",
+          "@UI.Hidden": true,
+          "@Core.Computed": true,
+          "virtual": true,
+          "type": "cds.Integer"
+        }
+      },
+      "actions": {
+        "cancel": {
+          "kind": "action",
+          "@Common.SideEffects.TargetProperties": [
+            "poetryslam/status_code",
+            "poetryslam/statusCriticality"
+          ],
+          "@cds.odata.bindingparameter.name": "poetryslam",
+          "returns": {
+            "type": "PoetrySlamService.PoetrySlams"
+          }
+        },
+        "publish": {
+          "kind": "action",
+          "@Common.SideEffects.TargetProperties": [
+            "poetryslam/status_code",
+            "poetryslam/statusCriticality"
+          ],
+          "@cds.odata.bindingparameter.name": "poetryslam",
+          "returns": {
+            "type": "PoetrySlamService.PoetrySlams"
+          }
+        }
+      }
+    },
+    "PoetrySlamService.Visitors": {
+      "kind": "entity",
+      "@readonly": true,
+      "@Common.SemanticObject": "visitors",
+      "@Common.SemanticKey": [
+        {
+          "=": "ID"
+        }
+      ],
+      "@restrict": [
+        {
+          "grant": [
+            "*"
+          ],
+          "to": "PoetrySlamFull"
+        },
+        {
+          "grant": [
+            "READ"
+          ],
+          "to": "PoetrySlamRestricted",
+          "where": "createdBy = $user",
+          "_where": "[{\"ref\":[\"createdBy\"]},\"=\",{\"ref\":[\"$user\"]}]"
+        }
+      ],
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.samples.poetryslams.Visitors"
+          ]
+        },
+        "columns": [
+          "*"
+        ]
+      },
+      "elements": {
+        "ID": {
+          "@Common.Text": {
+            "=": "email"
+          },
+          "@Common.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@Common.Label": "{i18n>email}",
+          "@title": "{i18n>uuid}",
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "name": {
+          "@readonly": true,
+          "@title": "{i18n>name}",
+          "@mandatory": true,
+          "type": "cds.String"
+        },
+        "email": {
+          "@assert.format": "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+          "@title": "{i18n>email}",
+          "@Communication.IsEmailAddress": true,
+          "type": "cds.String"
+        },
+        "visits": {
+          "@title": "{i18n>visits}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "PoetrySlamService.Visits",
+          "on": [
+            {
+              "ref": [
+                "visits",
+                "visitor"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "PoetrySlamService.Visits": {
+      "kind": "entity",
+      "@Common.SemanticObject": "visits",
+      "@Common.SemanticKey": [
+        {
+          "=": "ID"
+        }
+      ],
+      "@restrict": [
+        {
+          "grant": [
+            "*"
+          ],
+          "to": "PoetrySlamFull"
+        },
+        {
+          "grant": [
+            "READ"
+          ],
+          "to": "PoetrySlamRestricted",
+          "where": "createdBy = $user or artistIndicator=true",
+          "_where": "[{\"ref\":[\"createdBy\"]},\"=\",{\"ref\":[\"$user\"]},\"or\",{\"ref\":[\"artistIndicator\"]},\"=\",{\"val\":true}]"
+        }
+      ],
+      "@Capabilities.InsertRestrictions.Insertable.$edmJson.$Eq": [
+        {
+          "$Path": "parent/status_code"
+        },
+        2
+      ],
+      "@Common.SideEffects#VisitorData.$Type": "Common.SideEffectsType",
+      "@Common.SideEffects#VisitorData.SourceProperties": [
+        "visitor_ID"
+      ],
+      "@Common.SideEffects#VisitorData.TargetProperties": [
+        "status_code",
+        "statusCriticality",
+        "parent/status_code",
+        "parent/statusCriticality",
+        "parent/freeVisitorSeats"
+      ],
+      "@Common.SideEffects#VisitorData.TargetEntities": [
+        "visitor"
+      ],
+      "@UI.UpdateHidden": true,
+      "@UI.HeaderInfo.TypeName": "{i18n>visits}",
+      "@UI.HeaderInfo.TypeNamePlural": "{i18n>visits-plural}",
+      "@UI.HeaderInfo.Title.$Type": "UI.DataField",
+      "@UI.HeaderInfo.Title.Value": {
+        "=": "parent.title"
+      },
+      "@UI.Identification": [
+        {
+          "$Type": "UI.DataFieldForIntentBasedNavigation",
+          "SemanticObject": "visitors",
+          "Action": "display",
+          "Label": "{i18n>maintainVisitor}",
+          "Mapping": [
+            {
+              "$Type": "Common.SemanticObjectMappingType",
+              "LocalProperty": {
+                "=": "visitor.ID"
+              },
+              "SemanticObjectProperty": "ID"
+            }
+          ]
+        }
+      ],
+      "@UI.LineItem#VisitorData": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "visitor_ID"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "visitor.email"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "artistIndicator"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "status_code"
+          },
+          "Criticality": {
+            "=": "statusCriticality"
+          },
+          "Label": "{i18n>status}"
+        },
+        {
+          "$Type": "UI.DataFieldForAction",
+          "Action": "PoetrySlamService.cancelVisit",
+          "Label": "{i18n>cancelVisit}"
+        },
+        {
+          "$Type": "UI.DataFieldForAction",
+          "Action": "PoetrySlamService.confirmVisit",
+          "Label": "{i18n>confirmVisit}"
+        }
+      ],
+      "@UI.Facets": [
+        {
+          "$Type": "UI.ReferenceFacet",
+          "Label": "{i18n>visitor}",
+          "ID": "Visitor",
+          "Target": "@UI.FieldGroup#VisitorData"
+        },
+        {
+          "$Type": "UI.ReferenceFacet",
+          "Label": "{i18n>administrativeData}",
+          "ID": "AdministrativeData",
+          "Target": "@UI.FieldGroup#AdministrativeData"
+        }
+      ],
+      "@UI.FieldGroup#AdministrativeData.$Type": "UI.FieldGroupType",
+      "@UI.FieldGroup#AdministrativeData.Data": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "createdBy"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "createdAt"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "modifiedBy"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "modifiedAt"
+          }
+        }
+      ],
+      "@UI.FieldGroup#VisitorData.$Type": "UI.FieldGroupType",
+      "@UI.FieldGroup#VisitorData.Data": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "visitor.name"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "visitor.email"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "artistIndicator"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "status.code"
+          },
+          "Criticality": {
+            "=": "statusCriticality"
+          }
+        }
+      ],
+      "@assert.unique.visitorVisit": [
+        {
+          "=": "parent"
+        },
+        {
+          "=": "visitor"
+        }
+      ],
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.samples.poetryslams.Visits"
+          ]
+        },
+        "columns": [
+          "*",
+          {
+            "virtual": true,
+            "val": null,
+            "as": "statusCriticality",
+            "cast": {
+              "type": "cds.Integer"
+            }
+          }
+        ]
+      },
+      "elements": {
+        "ID": {
+          "@title": "{i18n>uuid}",
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "parent": {
+          "@assert.integrity": true,
+          "@title": "{i18n>poetrySlamUUID}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "PoetrySlamService.PoetrySlams",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "visitor": {
+          "@Common.ValueList.CollectionPath": "Visitors",
+          "@Common.ValueList.Parameters": [
+            {
+              "$Type": "Common.ValueListParameterOut",
+              "LocalDataProperty": "visitor_ID",
+              "ValueListProperty": "ID"
+            },
+            {
+              "$Type": "Common.ValueListParameterDisplayOnly",
+              "ValueListProperty": "name"
+            },
+            {
+              "$Type": "Common.ValueListParameterDisplayOnly",
+              "ValueListProperty": "email"
+            }
+          ],
+          "@Common.Text": {
+            "=": "visitor.name"
+          },
+          "@Common.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@Common.Label": "{i18n>name}",
+          "@assert.integrity": true,
+          "@title": "{i18n>visitorUUID}",
+          "@mandatory": true,
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "PoetrySlamService.Visitors",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "artistIndicator": {
+          "@title": "{i18n>artistIndicator}",
+          "type": "cds.Boolean",
+          "default": {
+            "val": false
+          }
+        },
+        "status": {
+          "@readonly": true,
+          "@Common.Text": {
+            "=": "status.name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@assert.integrity": true,
+          "@title": "{i18n>status}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "PoetrySlamService.VisitStatusCodes",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "statusCriticality": {
+          "@title": "{i18n>statusCriticality}",
+          "@Core.Computed": true,
+          "virtual": true,
+          "type": "cds.Integer"
+        }
+      },
+      "actions": {
+        "cancelVisit": {
+          "kind": "action",
+          "@Common.SideEffects.TargetProperties": [
+            "visits/statusCriticality",
+            "visits/status_code",
+            "visits/parent/status_code",
+            "visits/parent/statusCriticality",
+            "visits/parent/freeVisitorSeats",
+            "visits/parent/bookedSeats"
+          ],
+          "@cds.odata.bindingparameter.name": "visits",
+          "returns": {
+            "type": "PoetrySlamService.Visits"
+          }
+        },
+        "confirmVisit": {
+          "kind": "action",
+          "@Common.SideEffects.TargetProperties": [
+            "visits/statusCriticality",
+            "visits/status_code",
+            "visits/parent/status_code",
+            "visits/parent/statusCriticality",
+            "visits/parent/freeVisitorSeats",
+            "visits/parent/bookedSeats"
+          ],
+          "@cds.odata.bindingparameter.name": "visits",
+          "returns": {
+            "type": "PoetrySlamService.Visits"
+          }
+        }
+      }
+    },
+    "PoetrySlamService.Currencies": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Currencies"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5
+        },
+        "minorUnit": {
+          "@title": "{i18n>CurrencyMinorUnit}",
+          "type": "cds.Int16"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "PoetrySlamService.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "PoetrySlamService.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "PoetrySlamService.userRoles": {
+      "kind": "type",
+      "elements": {
+        "identified": {
+          "type": "cds.Boolean"
+        },
+        "authenticated": {
+          "type": "cds.Boolean"
+        }
+      }
+    },
+    "PoetrySlamService.user": {
+      "kind": "type",
+      "elements": {
+        "id": {
+          "type": "cds.String"
+        },
+        "locale": {
+          "type": "cds.String"
+        },
+        "roles": {
+          "type": "PoetrySlamService.userRoles"
+        }
+      }
+    },
+    "PoetrySlamService.userInfo": {
+      "kind": "function",
+      "returns": {
+        "type": "PoetrySlamService.user"
+      }
+    },
+    "PoetrySlamService.createTestData": {
+      "kind": "action",
+      "@Common.SideEffects.TargetEntities": [
+        "/PoetrySlamService.EntityContainer/PoetrySlams"
+      ],
+      "returns": {
+        "type": "cds.Boolean"
+      }
+    },
+    "VisitorService": {
+      "@source": "srv/visitor/visitorService.cds",
+      "kind": "service",
+      "@path": "visitorservice",
+      "@requires": [
+        "PoetrySlamFull"
+      ]
+    },
+    "VisitorService.Visitors": {
+      "kind": "entity",
+      "@odata.draft.enabled": true,
+      "@Common.SemanticObject": "visitors",
+      "@Common.SemanticKey": [
+        {
+          "=": "ID"
+        }
+      ],
+      "@restrict": [
+        {
+          "grant": [
+            "*"
+          ],
+          "to": "PoetrySlamFull"
+        }
+      ],
+      "@Capabilities.InsertRestrictions.Insertable": true,
+      "@Capabilities.UpdateRestrictions.Updatable": true,
+      "@Capabilities.DeleteRestrictions.Deletable": true,
+      "@UI.UpdateHidden": false,
+      "@UI.HeaderInfo.$Type": "UI.HeaderInfoType",
+      "@UI.HeaderInfo.TypeName": "{i18n>visitor}",
+      "@UI.HeaderInfo.TypeNamePlural": "{i18n>visitor-plural}",
+      "@UI.HeaderInfo.Title.$Type": "UI.DataField",
+      "@UI.HeaderInfo.Title.Value": {
+        "=": "name"
+      },
+      "@UI.Identification": [
+        {
+          "$Type": "UI.DataFieldForIntentBasedNavigation",
+          "SemanticObject": "poetryslams",
+          "Action": "display",
+          "Label": "{i18n>maintainPoetrySlams}"
+        }
+      ],
+      "@UI.FieldGroup#GeneralData.$Type": "UI.FieldGroupType",
+      "@UI.FieldGroup#GeneralData.Data": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "name"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "email"
+          },
+          "@Common.FieldControl": {
+            "#": "Mandatory"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "ID"
+          },
+          "@UI.Hidden": true
+        }
+      ],
+      "@UI.FieldGroup#AdministrativeData.$Type": "UI.FieldGroupType",
+      "@UI.FieldGroup#AdministrativeData.Data": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "createdBy"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "createdAt"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "modifiedBy"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "modifiedAt"
+          }
+        }
+      ],
+      "@UI.Facets": [
+        {
+          "$Type": "UI.ReferenceFacet",
+          "ID": "GeneralData",
+          "Label": "{i18n>generalData}",
+          "Target": "@UI.FieldGroup#GeneralData"
+        },
+        {
+          "$Type": "UI.ReferenceFacet",
+          "Label": "{i18n>poetrySlamsData}",
+          "ID": "PoetrySlamsData",
+          "Target": "visits/@UI.LineItem#PoetrySlamData"
+        },
+        {
+          "$Type": "UI.ReferenceFacet",
+          "Label": "{i18n>administrativeData}",
+          "ID": "AdministrativeData",
+          "Target": "@UI.FieldGroup#AdministrativeData"
+        }
+      ],
+      "@UI.LineItem": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "name"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "email"
+          }
+        }
+      ],
+      "@UI.SelectionFields": [
+        {
+          "=": "name"
+        },
+        {
+          "=": "email"
+        }
+      ],
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.samples.poetryslams.Visitors"
+          ]
+        },
+        "columns": [
+          "*"
+        ]
+      },
+      "elements": {
+        "ID": {
+          "@title": "{i18n>uuid}",
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "name": {
+          "@title": "{i18n>name}",
+          "@mandatory": true,
+          "type": "cds.String"
+        },
+        "email": {
+          "@assert.format": "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+          "@title": "{i18n>email}",
+          "@Communication.IsEmailAddress": true,
+          "type": "cds.String"
+        },
+        "visits": {
+          "@title": "{i18n>visits}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "VisitorService.Visits",
+          "on": [
+            {
+              "ref": [
+                "visits",
+                "visitor"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "VisitorService.Visits": {
+      "kind": "entity",
+      "@readonly": true,
+      "@Common.SemanticObject": "visits",
+      "@Common.SemanticKey": [
+        {
+          "=": "ID"
+        }
+      ],
+      "@restrict": [
+        {
+          "grant": [
+            "READ"
+          ],
+          "to": "PoetrySlamFull"
+        }
+      ],
+      "@UI.HeaderInfo.TypeName": "{i18n>booking}",
+      "@UI.HeaderInfo.TypeNamePlural": "{i18n>booking-plural}",
+      "@UI.LineItem#PoetrySlamData": [
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "parent.title"
+          },
+          "@Common.FieldControl": {
+            "#": "Optional"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "parent.dateTime"
+          },
+          "@Common.FieldControl": {
+            "#": "Optional"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Value": {
+            "=": "artistIndicator"
+          }
+        }
+      ],
+      "@assert.unique.visitorVisit": [
+        {
+          "=": "parent"
+        },
+        {
+          "=": "visitor"
+        }
+      ],
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "sap.samples.poetryslams.Visits"
+            ]
+          },
+          "columns": [
+            "*"
+          ],
+          "where": [
+            {
+              "ref": [
+                "status",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "val": 1
+            }
+          ]
+        }
+      },
+      "elements": {
+        "ID": {
+          "@title": "{i18n>uuid}",
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "parent": {
+          "@assert.integrity": true,
+          "@title": "{i18n>poetrySlamUUID}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "VisitorService.PoetrySlams",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "visitor": {
+          "@assert.integrity": true,
+          "@title": "{i18n>visitorUUID}",
+          "@mandatory": true,
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "VisitorService.Visitors",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "artistIndicator": {
+          "@title": "{i18n>artistIndicator}",
+          "type": "cds.Boolean",
+          "default": {
+            "val": false
+          }
+        },
+        "status": {
+          "@assert.integrity": true,
+          "@title": "{i18n>status}",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "VisitorService.VisitStatusCodes",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "VisitorService.PoetrySlams": {
+      "kind": "entity",
+      "@readonly": true,
+      "@Common.SemanticObject": "poetryslams",
+      "@Common.SemanticKey": [
+        {
+          "=": "ID"
+        }
+      ],
+      "@restrict": [
+        {
+          "grant": [
+            "READ"
+          ],
+          "to": "PoetrySlamFull"
+        }
+      ],
+      "@assert.unique.identifier": [
+        {
+          "=": "number"
+        }
+      ],
+      "@fiori.draft.enabled": true,
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "sap.samples.poetryslams.PoetrySlams"
+            ]
+          },
+          "columns": [
+            {
+              "ref": [
+                "ID"
+              ]
+            },
+            {
+              "ref": [
+                "title"
+              ]
+            },
+            {
+              "ref": [
+                "dateTime"
+              ]
+            }
+          ]
+        }
+      },
+      "elements": {
+        "ID": {
+          "@title": "{i18n>uuid}",
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "title": {
+          "@title": "{i18n>title}",
+          "@mandatory": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "dateTime": {
+          "@title": "{i18n>dateTime}",
+          "@mandatory": true,
+          "type": "cds.DateTime"
+        }
+      }
+    },
+    "sap.samples.poetryslams.PoetrySlamStatusCodes.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer",
+          "default": {
+            "val": 1
+          }
+        }
+      }
+    },
+    "sap.samples.poetryslams.VisitStatusCodes.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer"
+        }
+      }
+    },
+    "sap.common.Languages.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        }
+      }
+    },
+    "sap.common.Countries.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Currencies.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Timezones.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>TimeZoneCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 100
+        }
+      }
+    },
+    "PoetrySlamService.PoetrySlamStatusCodes": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.samples.poetryslams.PoetrySlamStatusCodes"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer",
+          "default": {
+            "val": 1
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "PoetrySlamService.PoetrySlamStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "PoetrySlamService.PoetrySlamStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "PoetrySlamService.VisitStatusCodes": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.samples.poetryslams.VisitStatusCodes"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "PoetrySlamService.VisitStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "PoetrySlamService.VisitStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "PoetrySlamService.Currencies.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Currencies.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "VisitorService.VisitStatusCodes": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.samples.poetryslams.VisitStatusCodes"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "VisitorService.VisitStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "VisitorService.VisitStatusCodes.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "PoetrySlamService.PoetrySlamStatusCodes.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.samples.poetryslams.PoetrySlamStatusCodes.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer",
+          "default": {
+            "val": 1
+          }
+        }
+      }
+    },
+    "PoetrySlamService.VisitStatusCodes.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.samples.poetryslams.VisitStatusCodes.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer"
+        }
+      }
+    },
+    "VisitorService.VisitStatusCodes.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.samples.poetryslams.VisitStatusCodes.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@Common.Text.@UI.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "@title": "{i18n>status}",
+          "key": true,
+          "type": "cds.Integer"
+        }
+      }
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v5.5.0",
+    "flavor": "inferred"
+  },
+  "$version": "2.0"
+}

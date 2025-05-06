@@ -1,0 +1,17 @@
+VIEW VisitorService_Visits AS SELECT
+  Visits_0.ID,
+  Visits_0.createdAt,
+  Visits_0.createdBy,
+  Visits_0.modifiedAt,
+  Visits_0.modifiedBy,
+  Visits_0.parent_ID,
+  Visits_0.visitor_ID,
+  Visits_0.artistIndicator,
+  Visits_0.status_code
+FROM sap_samples_poetryslams_Visits AS Visits_0
+WHERE Visits_0.status_code = 1
+WITH ASSOCIATIONS (
+  MANY TO ONE JOIN VisitorService_PoetrySlams AS parent ON (parent.ID = parent_ID),
+  MANY TO ONE JOIN VisitorService_Visitors AS visitor ON (visitor.ID = visitor_ID),
+  MANY TO ONE JOIN VisitorService_VisitStatusCodes AS status ON (status.code = status_code)
+)

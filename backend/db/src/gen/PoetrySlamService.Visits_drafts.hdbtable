@@ -1,0 +1,21 @@
+COLUMN TABLE PoetrySlamService_Visits_drafts (
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP NULL,
+  createdBy NVARCHAR(255) NULL,
+  modifiedAt TIMESTAMP NULL,
+  modifiedBy NVARCHAR(255) NULL,
+  parent_ID NVARCHAR(36) NULL,
+  visitor_ID NVARCHAR(36) NULL,
+  artistIndicator BOOLEAN NULL DEFAULT FALSE,
+  status_code INTEGER NULL,
+  IsActiveEntity BOOLEAN,
+  HasActiveEntity BOOLEAN,
+  HasDraftEntity BOOLEAN,
+  DraftAdministrativeData_DraftUUID NVARCHAR(36) NOT NULL,
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN PoetrySlamService_PoetrySlams_drafts AS parent ON (parent.ID = parent_ID),
+  MANY TO ONE JOIN PoetrySlamService_Visitors AS visitor ON (visitor.ID = visitor_ID),
+  MANY TO ONE JOIN PoetrySlamService_VisitStatusCodes AS status ON (status.code = status_code),
+  MANY TO ONE JOIN PoetrySlamService_DraftAdministrativeData AS DraftAdministrativeData ON (DraftAdministrativeData.DraftUUID = DraftAdministrativeData_DraftUUID)
+)

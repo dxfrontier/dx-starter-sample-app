@@ -1,0 +1,1 @@
+UNIQUE INVERTED INDEX sap_samples_poetryslams_PoetrySlams_identifier ON sap_samples_poetryslams_PoetrySlams ("NUMBER")

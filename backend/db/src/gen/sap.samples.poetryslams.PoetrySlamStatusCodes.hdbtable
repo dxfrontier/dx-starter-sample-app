@@ -1,0 +1,9 @@
+COLUMN TABLE sap_samples_poetryslams_PoetrySlamStatusCodes (
+  name NVARCHAR(255),
+  descr NVARCHAR(1000),
+  code INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY(code)
+) WITH ASSOCIATIONS (
+  MANY TO MANY JOIN sap_samples_poetryslams_PoetrySlamStatusCodes_texts AS texts ON (texts.code = code),
+  MANY TO ONE JOIN sap_samples_poetryslams_PoetrySlamStatusCodes_texts AS localized ON (localized.code = code AND localized.locale = SESSION_CONTEXT('LOCALE'))
+)

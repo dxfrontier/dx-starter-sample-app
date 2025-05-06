@@ -1,0 +1,9 @@
+  CONSTRAINT c__sap_samples_poetryslams_Visits_visitor
+  ON sap_samples_poetryslams_Visits
+  FOREIGN KEY(visitor_ID)
+  REFERENCES sap_samples_poetryslams_Visitors(ID)
+  ON UPDATE RESTRICT
+  ON DELETE RESTRICT
+  VALIDATED
+  ENFORCED
+  INITIALLY DEFERRED

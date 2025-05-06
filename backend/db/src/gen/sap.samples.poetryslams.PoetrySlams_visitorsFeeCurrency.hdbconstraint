@@ -1,0 +1,9 @@
+  CONSTRAINT c__sap_samples_poetryslams_PoetrySlams_visitorsFeeCurrency
+  ON sap_samples_poetryslams_PoetrySlams
+  FOREIGN KEY(visitorsFeeCurrency_code)
+  REFERENCES sap_common_Currencies(code)
+  ON UPDATE RESTRICT
+  ON DELETE RESTRICT
+  VALIDATED
+  ENFORCED
+  INITIALLY DEFERRED

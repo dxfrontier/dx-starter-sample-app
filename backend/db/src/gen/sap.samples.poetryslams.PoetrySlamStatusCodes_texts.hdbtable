@@ -1,0 +1,7 @@
+COLUMN TABLE sap_samples_poetryslams_PoetrySlamStatusCodes_texts (
+  locale NVARCHAR(14) NOT NULL,
+  name NVARCHAR(255),
+  descr NVARCHAR(1000),
+  code INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY(locale, code)
+)

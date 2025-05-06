@@ -1,0 +1,16 @@
+COLUMN TABLE sap_samples_poetryslams_Visits (
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  parent_ID NVARCHAR(36),
+  visitor_ID NVARCHAR(36),
+  artistIndicator BOOLEAN DEFAULT FALSE,
+  status_code INTEGER,
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN sap_samples_poetryslams_PoetrySlams AS parent ON (parent.ID = parent_ID),
+  MANY TO ONE JOIN sap_samples_poetryslams_Visitors AS visitor ON (visitor.ID = visitor_ID),
+  MANY TO ONE JOIN sap_samples_poetryslams_VisitStatusCodes AS status ON (status.code = status_code)
+)

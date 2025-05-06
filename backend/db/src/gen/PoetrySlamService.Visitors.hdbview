@@ -1,0 +1,12 @@
+VIEW PoetrySlamService_Visitors AS SELECT
+  Visitors_0.ID,
+  Visitors_0.createdAt,
+  Visitors_0.createdBy,
+  Visitors_0.modifiedAt,
+  Visitors_0.modifiedBy,
+  Visitors_0.name,
+  Visitors_0.email
+FROM sap_samples_poetryslams_Visitors AS Visitors_0
+WITH ASSOCIATIONS (
+  MANY TO MANY JOIN PoetrySlamService_Visits AS visits ON (visits.visitor_ID = ID)
+)

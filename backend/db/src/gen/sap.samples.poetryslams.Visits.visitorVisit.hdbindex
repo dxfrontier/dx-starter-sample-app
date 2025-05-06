@@ -1,0 +1,1 @@
+UNIQUE INVERTED INDEX sap_samples_poetryslams_Visits_visitorVisit ON sap_samples_poetryslams_Visits (parent_ID, visitor_ID)

@@ -1,0 +1,22 @@
+VIEW PoetrySlamService_PoetrySlams AS SELECT
+  PoetrySlams_0.ID,
+  PoetrySlams_0.createdAt,
+  PoetrySlams_0.createdBy,
+  PoetrySlams_0.modifiedAt,
+  PoetrySlams_0.modifiedBy,
+  PoetrySlams_0."NUMBER",
+  PoetrySlams_0.title,
+  PoetrySlams_0.description,
+  PoetrySlams_0."DATETIME",
+  PoetrySlams_0.maxVisitorsNumber,
+  PoetrySlams_0.freeVisitorSeats,
+  PoetrySlams_0.visitorsFeeAmount,
+  PoetrySlams_0.visitorsFeeCurrency_code,
+  PoetrySlams_0.status_code,
+  PoetrySlams_0.maxVisitorsNumber - PoetrySlams_0.freeVisitorSeats AS bookedSeats
+FROM sap_samples_poetryslams_PoetrySlams AS PoetrySlams_0
+WITH ASSOCIATIONS (
+  MANY TO ONE JOIN PoetrySlamService_Currencies AS visitorsFeeCurrency ON (visitorsFeeCurrency.code = visitorsFeeCurrency_code),
+  MANY TO ONE JOIN PoetrySlamService_PoetrySlamStatusCodes AS status ON (status.code = status_code),
+  MANY TO MANY JOIN PoetrySlamService_Visits AS visits ON (visits.parent_ID = ID)
+)

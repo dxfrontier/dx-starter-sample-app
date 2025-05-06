@@ -1,0 +1,9 @@
+  CONSTRAINT c__sap_samples_poetryslams_Visits_status
+  ON sap_samples_poetryslams_Visits
+  FOREIGN KEY(status_code)
+  REFERENCES sap_samples_poetryslams_VisitStatusCodes(code)
+  ON UPDATE RESTRICT
+  ON DELETE RESTRICT
+  VALIDATED
+  ENFORCED
+  INITIALLY DEFERRED

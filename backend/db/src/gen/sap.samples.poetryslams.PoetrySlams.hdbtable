@@ -1,0 +1,21 @@
+COLUMN TABLE sap_samples_poetryslams_PoetrySlams (
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  "NUMBER" NVARCHAR(255),
+  title NVARCHAR(255),
+  description NVARCHAR(1000),
+  "DATETIME" SECONDDATE,
+  maxVisitorsNumber INTEGER,
+  freeVisitorSeats INTEGER,
+  visitorsFeeAmount DECIMAL(6, 2),
+  visitorsFeeCurrency_code NVARCHAR(3),
+  status_code INTEGER DEFAULT 1,
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN sap_common_Currencies AS visitorsFeeCurrency ON (visitorsFeeCurrency.code = visitorsFeeCurrency_code),
+  MANY TO ONE JOIN sap_samples_poetryslams_PoetrySlamStatusCodes AS status ON (status.code = status_code),
+  MANY TO MANY JOIN sap_samples_poetryslams_Visits AS visits ON (visits.parent_ID = ID)
+)

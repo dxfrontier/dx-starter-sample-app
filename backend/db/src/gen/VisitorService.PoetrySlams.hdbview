@@ -1,0 +1,5 @@
+VIEW VisitorService_PoetrySlams AS SELECT
+  PoetrySlams_0.ID,
+  PoetrySlams_0.title,
+  PoetrySlams_0."DATETIME"
+FROM sap_samples_poetryslams_PoetrySlams AS PoetrySlams_0
